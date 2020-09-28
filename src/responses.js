@@ -1,4 +1,4 @@
-const users = {};
+// const users = {};
 
 const respondJSON = (request, response, status, object) => {
   response.writeHead(status, { 'Content-Type': 'application/json' });
@@ -11,34 +11,35 @@ const respondJSONMeta = (request, response, status) => {
   response.end();
 };
 
-const addUser = (request, response, body) => {
+const addUser = (request, response) => {
+// const addUser = (request, response, body) => {
   const responseObj = {
     message: 'Name and age are both required',
   };
 
-  //if (!body.name || !body.age) {
+  // if (!body.name || !body.age) {
   //  responseObj.id = 'missing params';
   //  // return respondJSON(request, response, 400, JSON.stringify(responseObj));
   //  return respondJSON(request, response, 400, responseObj);
-  //}
+  // }
   //
-  let responseCode = 201;
+  const responseCode = 201;
   //
-  //if (users[body.name]) {
+  // if (users[body.name]) {
   //  responseCode = 204;
-  //} else {
+  // } else {
   //  users[body.name] = {};
   //  users[body.name].name = body.name;
-  //}
+  // }
   //
-  //users[body.name].age = body.age;
+  // users[body.name].age = body.age;
   //
   if (responseCode === 201) {
     responseObj.message = 'Created Successfully!';
     return respondJSON(request, response, responseCode, responseObj);
   }
   //
-  //return respondJSONMeta(request, response, responseCode);
+  return respondJSONMeta(request, response, responseCode);
 };
 
 const notFound = (request, response) => {
