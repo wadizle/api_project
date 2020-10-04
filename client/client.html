@@ -85,7 +85,7 @@
             const addUser = (e) => sendPost(e, nameForm);
             nameForm.addEventListener('submit', addUser);
 
-            const addFile = (e) => sendPost(e, uploadForm);
+            const addFile = (e) => sendFile(e, uploadForm);
             uploadForm.addEventListener('submit', addFile);
         };
 
