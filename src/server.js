@@ -22,7 +22,7 @@ const onRequest = (request, response) => {
 
   if (request.method === 'POST') {
     const form = formidable.IncomingForm();
-    form.uploadDir = __dirname;
+    form.uploadDir = __dirname + '/uploads';
     form.parse(request, (err, fields, files) => {
       console.log('uploaded file');
       const oldPath = files.filetoupload.path;
@@ -42,7 +42,7 @@ const onRequest = (request, response) => {
     });
   } else if (parsedUrl.pathname === '/getFiles') {
     const fileArr = [];
-    fs.readdir(path.join(__dirname, '../uploads'), (err, files) => {
+    fs.readdir(path.join(__dirname, '/uploads'), (err, files) => {
     //fs.readdir(__dirname, (err, files) => {
       if (err) {
         console.log(err);
