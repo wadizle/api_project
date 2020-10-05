@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const url = require('url');
 // const query = require('querystring');
-//const formidable = require('formidable');
+// const formidable = require('formidable');
 const htmlHandler = require('./htmlResponses.js');
 const responseHandler = require('./responses.js');
 
@@ -21,45 +21,42 @@ const onRequest = (request, response) => {
   // const requestType = request.headers.accept.split(',');
 
   if (request.method === 'POST') {
-    //const form = formidable.IncomingForm();
-    //form.parse(request, (err, fields, files) => {
-    //  console.log("uploaded file")
-    //  const oldPath = files.filetoupload.path;
-    //  const newPath = path.join(__dirname, '../uploads/') + files.filetoupload.name;
-    //  
-    //  fs.rename(oldPath, newPath, (error) => {
-    //    if (error) console.log(error); 
-    //    //ADD RESPONSE
-    //  });
-    //});
-  }
-  else if(parsedUrl.pathname === '/getFiles'){
-      let fileArr = [];
-      fs.readdir(path.join(__dirname, '../uploads'), function (err, files){
-        if(err){
-            console.log(err);
-            //ADD RESPONSE
-		}
-        for(let i = 0; i < files.length; i++){
-            fileArr.push(files[i]);
-		}
-        responseHandler.sendFiles(request, response, fileArr);
+     const form = formidable.IncomingForm();
+     form.parse(request, (err, fields, files) => {
+      console.log("uploaded file")
+      const oldPath = files.filetoupload.path;
+      const newPath = path.join(__dirname, '../uploads/') + files.filetoupload.name;
+    
+      fs.rename(oldPath, newPath, (error) => {
+        if (error) console.log(error);
+        //ADD RESPONSE
       });
-      
+     });
+  } else if (parsedUrl.pathname === '/getFiles') {
+    const fileArr = [];
+    fs.readdir(path.join(__dirname, '../uploads'), (err, files) => {
+      if (err) {
+        console.log(err);
+        // ADD RESPONSE
+      }
+      for (let i = 0; i < files.length; i++) {
+        fileArr.push(files[i]);
+      }
+      responseHandler.sendFiles(request, response, fileArr);
+    });
   }
+  //else if (parsedUrl.pathname === '/downloadFile') {
+
+
+  //} 
   else if (parsedUrl.pathname === '/') {
-     htmlHandler.getIndex(request, response);
-  } 
-  else if (parsedUrl.pathname === '/style.css') {
-     htmlHandler.getCSS(request, response);
-  } 
-  else {
-    //urlStruct.notFound(request, response);
+    htmlHandler.getIndex(request, response);
+  } else if (parsedUrl.pathname === '/style.css') {
+    htmlHandler.getCSS(request, response);
+  } else {
+    // urlStruct.notFound(request, response);
     responseHandler.notFound(request, response);
   }
- 
-
- 
 
 //  if (request.method === 'POST') {
 //    const body = [];

@@ -43,8 +43,8 @@ const addUser = (request, response) => {
 };
 
 const sendFiles = (request, response, files) => {
-    respondJSON(request, response, 200, files);
-}
+  respondJSON(request, response, 200, files);
+};
 
 const notFound = (request, response) => {
   const responseObj = {

@@ -74,7 +74,13 @@
 
             const button = document.createElement("button");
             button.appendChild(document.createTextNode("Download"));
-            button.onclick = () => console.log("wow");
+            button.onclick = () => {
+                const xhr = new XMLHttpRequest();
+                xhr.open("GET", "/downloadFile");
+                xhr.send();
+
+                return false;
+            };
             div.appendChild(button);
 
             return div;
