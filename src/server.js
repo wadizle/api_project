@@ -25,12 +25,12 @@ const onRequest = (request, response) => {
     form.uploadDir = __dirname;
     form.parse(request, (err, fields, files) => {
       console.log('uploaded file');
-      //const oldPath = files.filetoupload.path;
-      //const newPath = path.join(__dirname, '../uploads/') + files.filetoupload.name;
+      const oldPath = files.filetoupload.path;
+      const newPath = path.join(__dirname, '../uploads/') + files.filetoupload.name;
       console.log(err);
       console.log(fields);
       console.log(path.join(__dirname, '../uploads/') + files.filetoupload.name);
-      const obj = {name : files.filetoupload.name, path : files.filetoupload.path};
+      const obj = {name : files.filetoupload.name, path1 : oldPath, path2 : newPath};
       
       responseHandler.respondJSON(request, response, 201, obj);
       //htmlHandler.getIndex(request, response);
