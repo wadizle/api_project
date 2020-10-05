@@ -29,7 +29,7 @@ const onRequest = (request, response) => {
       //const newPath = path.join(__dirname, '../uploads/') + files.filetoupload.name;
       console.log(err);
       console.log(fields);
-      console.log(files);
+      console.log(path.join(__dirname, '../uploads/') + files.filetoupload.name;)
       
 
 
