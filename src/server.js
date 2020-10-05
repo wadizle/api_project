@@ -2,8 +2,9 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const url = require('url');
-// const query = require('querystring');
+const query = require('querystring');
 const formidable = require('formidable');
+const express = require('express');
 const htmlHandler = require('./htmlResponses.js');
 const responseHandler = require('./responses.js');
 
@@ -55,11 +56,25 @@ const onRequest = (request, response) => {
       responseHandler.sendFiles(request, response, fileArr);
     });
   } else if (parsedUrl.pathname === '/downloadFile'){
-    let filePath = path.join(__dirname, "/wow.txt");
+    const params = query.parse(parsedUrl.query);
+    const fileName = params.name;
+    const filePath = path.join(__dirname, fileName);
+
+    //console.log(express)
+    //express.response.download(filePath);
+    //const file = fs.createWriteStream(filePath);
+
+
     const readStream = fs.createReadStream(filePath);
-
-    //response.writeHead
-
+    
+    
+    response.writeHead(200, {
+        //'Content-Type': 'audio/mpeg',
+        'Content-Type': 'application/pdf',
+        'Content-Length': fs.statSync(filePath).size,
+        'Content-Disposition': `attachment; filename=${params.name}`
+    });
+    
     readStream.on('open', function(){
         readStream.pipe(response);
     });

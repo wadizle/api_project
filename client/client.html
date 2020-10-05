@@ -4,6 +4,8 @@
     <title>Our simple HTTP server</title>
     <link rel="stylesheet" type="text/css" href="/style.css">
   
+    <!-- filesaver.js IS NOT MINE. https://github.com/eligrey/FileSaver.js -->
+	<!--<script src="../src/filesaver.js"></script>-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
     <script type="text/babel">
 
@@ -75,11 +77,15 @@
 
             const button = document.createElement("button");
             button.appendChild(document.createTextNode("Download"));
-            button.onclick = () => {
+            button.onclick = (e) => {
                 const xhr = new XMLHttpRequest();
-                xhr.open("GET", "/downloadFile");
+                const fileName = e.target.parentElement.id;
+                xhr.open("GET", `/downloadFile?name=${fileName}`);
 
-                xhr.onload = () => console.log(xhr.response);
+                xhr.onload = () => {
+                    console.log(xhr);
+                    //saveAs(xhr.response, "")
+                };
 
                 xhr.send();
 
@@ -115,6 +121,11 @@
 
             return false;
         };
+
+        //function downloadTextFile(){
+	    //    const blob = new Blob([story], {type : 'application/json'});
+	    //    saveAs(blob, "story.txt");
+        //}
 
         //sends a 
         //const downloadFiles = (e, uploadForm) => {
