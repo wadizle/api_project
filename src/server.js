@@ -22,6 +22,7 @@ const onRequest = (request, response) => {
 
   if (request.method === 'POST') {
     const form = formidable.IncomingForm();
+    form.uploadDir = __dirname;
     form.parse(request, (err, fields, files) => {
       console.log('uploaded file');
       const oldPath = files.filetoupload.path;
