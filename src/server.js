@@ -54,7 +54,7 @@ const onRequest = (request, response) => {
         // ADD RESPONSE
       }
       for (let i = 0; i < files.length; i++) {
-        if(files[i].split('.').length === 1) fileArr.push(files[i]);
+        if(files[i].split('.')[1] !== "js") fileArr.push(files[i]);
       }
       responseHandler.sendFiles(request, response, fileArr);
     });
