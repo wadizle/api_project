@@ -32,7 +32,8 @@ const onRequest = (request, response) => {
         //ADD RESPONSE
       });
      });
-  } else if (parsedUrl.pathname === '/getFiles') {
+  } 
+  else if (parsedUrl.pathname === '/getFiles') {
     const fileArr = [];
     fs.readdir(path.join(__dirname, '../uploads'), (err, files) => {
       if (err) {
