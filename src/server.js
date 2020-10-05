@@ -4,7 +4,7 @@ const path = require('path');
 const url = require('url');
 const query = require('querystring');
 const formidable = require('formidable');
-const express = require('express');
+// const express = require('express');
 const htmlHandler = require('./htmlResponses.js');
 const responseHandler = require('./responses.js');
 
@@ -25,63 +25,60 @@ const onRequest = (request, response) => {
     const form = formidable.IncomingForm();
     form.uploadDir = __dirname;
     form.parse(request, (err, fields, files) => {
-      //console.log('uploaded file');
-      //console.log(files);
-      //const obj = {name : files.filetoupload.name};//, path1 : oldPath, path2 : newPath};
-      
+      // console.log('uploaded file');
+      // console.log(files);
+      // const obj = {name : files.filetoupload.name};//, path1 : oldPath, path2 : newPath};
+
       fs.rename(files.filetoupload.path, path.join(__dirname, files.filetoupload.name), (error) => {
         if (error) console.log(error);
         // ADD RESPONSE
       });
 
-      //responseHandler.respondJSON(request, response, 201, obj);
+      // responseHandler.respondJSON(request, response, 201, obj);
       htmlHandler.getIndex(request, response);
 
-      //fs.rename(oldPath, newPath, (error) => {
+      // fs.rename(oldPath, newPath, (error) => {
       //  if (error) console.log(error);
       //  // ADD RESPONSE
-      //});
+      // });
     });
   } else if (parsedUrl.pathname === '/getFiles') {
     const fileArr = [];
     fs.readdir(path.join(__dirname, ''), (err, files) => {
-    //fs.readdir(__dirname, (err, files) => {
+    // fs.readdir(__dirname, (err, files) => {
       if (err) {
         console.log(err);
         // ADD RESPONSE
       }
       for (let i = 0; i < files.length; i++) {
-        if(files[i].split('.')[1] !== "js") fileArr.push(files[i]);
+        if (files[i].split('.')[1] !== 'js') fileArr.push(files[i]);
       }
       responseHandler.sendFiles(request, response, fileArr);
     });
-  } else if (parsedUrl.pathname === '/downloadFile'){
+  } else if (parsedUrl.pathname === '/downloadFile') {
     const params = query.parse(parsedUrl.query);
     const fileName = params.name;
     const filePath = path.join(__dirname, fileName);
 
-    //console.log(express)
-    //express.response.download(filePath);
-    //const file = fs.createWriteStream(filePath);
-
+    // console.log(express)
+    // express.response.download(filePath);
+    // const file = fs.createWriteStream(filePath);
 
     const readStream = fs.createReadStream(filePath);
-    
-    
+
     response.writeHead(200, {
-        //'Content-Type': 'audio/mpeg',
-        'Content-Type': 'application/pdf',
-        'Content-Length': fs.statSync(filePath).size,
-        'Content-Disposition': `attachment; filename=${params.name}`
-    });
-    
-    readStream.on('open', function(){
-        readStream.pipe(response);
-    });
-    readStream.on('error', function(err){
-        response.end(err);
+      // 'Content-Type': 'audio/mpeg',
+      'Content-Type': 'application/pdf',
+      'Content-Length': fs.statSync(filePath).size,
+      'Content-Disposition': `attachment; filename=${params.name}`,
     });
 
+    readStream.on('open', () => {
+      readStream.pipe(response);
+    });
+    readStream.on('error', (err) => {
+      response.end(err);
+    });
   } else if (parsedUrl.pathname === '/') {
     htmlHandler.getIndex(request, response);
   } else if (parsedUrl.pathname === '/style.css') {
