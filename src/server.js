@@ -42,8 +42,8 @@ const onRequest = (request, response) => {
     });
   } else if (parsedUrl.pathname === '/getFiles') {
     const fileArr = [];
-    //fs.readdir(path.join(__dirname, '../uploads'), (err, files) => {
-    fs.readdir(__dirname, (err, files) => {
+    fs.readdir(path.join(__dirname, '../uploads'), (err, files) => {
+    //fs.readdir(__dirname, (err, files) => {
       if (err) {
         console.log(err);
         // ADD RESPONSE
