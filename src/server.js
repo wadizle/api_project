@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const url = require('url');
 // const query = require('querystring');
-// const formidable = require('formidable');
+const formidable = require('formidable');
 const htmlHandler = require('./htmlResponses.js');
 const responseHandler = require('./responses.js');
 
