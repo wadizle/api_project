@@ -11,103 +11,160 @@
             console.log(xhr.response);
         };
 
-        const requestUpdate = (e, userForm) => {
-            e.preventDefault();
-
-            const url = userForm.querySelector('#urlField').value;
-            const method = userForm.querySelector('#methodSelect').value;
-
-            const xhr = new XMLHttpRequest();
-            xhr.open(method, url);
-
-            xhr.setRequestHeader('Accept', 'application/json');
-            xhr.send();
-
-            xhr.onload = () => handleResponse(xhr);
-            
-            return false;
-        };
-
-        const sendPost = (e, nameForm) => {
-            e.preventDefault();
-
-            const nameAction = nameForm.getAttribute('action');
-            const nameMethod = nameForm.getAttribute('method');
-
-            const nameField = document.querySelector('#nameField');
-            const ageField = document.querySelector('#ageField');
-
-            const xhr = new XMLHttpRequest();
-            xhr.open(nameMethod, nameAction);
-
-            xhr.setRequestHeader('Accept', 'application/json');
-            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-
-            xhr.onload = () => handleResponse(xhr);
-
-            const formData = `name=${nameField.value}&age=${ageField.value}`;
-            xhr.send(formData);
-
-            return false;
-        };
+        //const sendPost = (e, nameForm) => {
+        //    e.preventDefault();
+        //
+        //    const nameAction = nameForm.getAttribute('action');
+        //    const nameMethod = nameForm.getAttribute('method');
+        //
+        //    const nameField = document.querySelector('#nameField');
+        //    const ageField = document.querySelector('#ageField');
+        //
+        //    const xhr = new XMLHttpRequest();
+        //    xhr.open(nameMethod, nameAction);
+        //
+        //    xhr.setRequestHeader('Accept', 'application/json');
+        //    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        //
+        //    xhr.onload = () => handleResponse(xhr);
+        //
+        //    const formData = `name=${nameField.value}&age=${ageField.value}`;
+        //    xhr.send(formData);
+        //
+        //    return false;
+        //};
 
         const sendFile = (e, uploadForm) => {
             e.preventDefault();
 
-            const uploadAction = uploadForm.getAttribute('action');
-            const uploadMethod = uploadForm.getAttribute('method');
-
-            //const nameField = document.querySelector('#nameField');
-            //const ageField = document.querySelector('#ageField');
             const files = document.querySelector('#fileSelector').files;
             console.log(files);
 
             const xhr = new XMLHttpRequest();
-            xhr.open(uploadMethod, uploadAction);
+            xhr.open("POST", "/uploadFile");
 
-            xhr.setRequestHeader('Accept', 'application/json');
-            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            //xhr.setRequestHeader('Accept', 'application/json');
+            //xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.setRequestHeader('Content-Type', 'multipart/form-data');
 
             xhr.onload = () => handleResponse(xhr);
 
-            //const formData = `name=${nameField.value}&age=${ageField.value}`;
-            const formData = new FormData();
+            //const formData = new FormData();
             //xhr.send(formData);
+
+            xhr.send(uploadForm);
 
             return false;
         };
 
+        const removeChildren = (element) => {
+            const children = element.children;
+            while(element.firstChild){
+                element.removeChild(element.lastChild);
+            }
+        }
+
+        const setupFile = (fileName) => {
+            const div = document.createElement("div");
+            div.id = fileName;
+            //img?
+            const p = document.createElement("p");
+            p.appendChild(document.createTextNode(fileName));
+            div.appendChild(p);
+
+            const button = document.createElement("button");
+            button.appendChild(document.createTextNode("Download"));
+            button.onclick = () => console.log("wow");
+            div.appendChild(button);
+
+            return div;
+        }
+
+        const displayFiles = (e) => {
+            e.preventDefault();
+
+            const xhr = new XMLHttpRequest();
+            xhr.open("GET", "getFiles");
+
+            //xhr.setRequestHeader('Accept', 'application/json');
+            
+            //xhr.onload = () => handleResponse(xhr);
+            xhr.onload = () => {
+                console.log(xhr.response);
+                let files = JSON.parse(xhr.response);
+                console.log(files);
+                const baseElement = document.querySelector("main");
+                removeChildren(baseElement);
+                for(let i = 0; i < files.length; i++){
+                    baseElement.appendChild(setupFile(files[i]));
+                }
+            };
+            //set up the forms/download buttons for each file    
+
+            xhr.send();
+
+            return false;
+        };
+
+        //sends a 
+        //const downloadFiles = (e, uploadForm) => {
+        //    e.preventDefault();
+        //
+        //    const files = document.querySelector('#fileSelector').files;
+        //    console.log(files);
+        //
+        //    const xhr = new XMLHttpRequest();
+        //    xhr.open("GET", "/downloadFile");
+        //
+        //    //xhr.setRequestHeader('Accept', 'application/json');
+        //    //xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        //
+        //    xhr.onload = () => handleResponse(xhr);
+        //
+        //    //const formData = new FormData();
+        //    //xhr.send(formData);
+        //
+        //    xhr.send(uploadForm);
+        //
+        //    return false;
+        //};
+
         const init = () => {
-            const nameForm = document.querySelector('#nameForm');
-            //const userForm = document.querySelector('#userForm');
             const uploadForm = document.querySelector('#uploadForm');
+            //const addFile = (e) => sendFile(e, uploadForm);
+            //uploadForm.addEventListener('submit', addFile);
+            //uploadForm.addEventListener('submit', (e) => sendFile(e, uploadForm));
 
-            const addUser = (e) => sendPost(e, nameForm);
-            nameForm.addEventListener('submit', addUser);
-
-            const addFile = (e) => sendFile(e, uploadForm);
-            uploadForm.addEventListener('submit', addFile);
+            const displayForm = document.querySelector('#displayForm');
+            displayForm.addEventListener('submit', displayFiles);
         };
 
         window.onload = init;
     </script>
 </head>
 <body>
+    <header>
+        <h1>Temporary File Share</h1>
+        <p>Directions/How to Use</p>
+    </header>
     <section id="top">
     <h3>POST Status Code Tests</h3>
-    <form id="uploadForm" action="/addFile" method="post">
-        <input type="file" id="fileSelector" />
+    <form id="uploadForm" method="post" action="/uploadForm" enctype="multipart/form-data">
+        <input type="file" name="filetoupload" id="fileSelector" multiple="multiple"/>
         <input type="submit" value="Upload File" />
     </form>
+    <form id="displayForm">
+        <input type="submit" value="Display Files" />
+    </form>
     
-    <form id="nameForm" action="/addUser" method="post">
+    <!--<form id="nameForm" action="/addUser" method="post">
         <label for="name">Name: </label>
         <input id="nameField" type="text" name="name" />
         <label for="age">Age: </label>
         <input id="ageField" type="number" name="age" min="0" max="100" step="1" />
         <input type="submit" value="Add User" />
-    </form>
+    </form>-->
     </section>
-    <section id="content"></section>
+    <main><p>Display files here</p></main>
 </body>
 </html>

@@ -42,6 +42,10 @@ const addUser = (request, response) => {
   return respondJSONMeta(request, response, responseCode);
 };
 
+const sendFiles = (request, response, files) => {
+    respondJSON(request, response, 200, files);
+}
+
 const notFound = (request, response) => {
   const responseObj = {
     message: 'The page you are looking for was not found',
@@ -53,5 +57,6 @@ const notFound = (request, response) => {
 
 module.exports = {
   addUser,
+  sendFiles,
   notFound,
 };
