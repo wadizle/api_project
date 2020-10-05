@@ -31,7 +31,7 @@ const onRequest = (request, response) => {
       console.log(fields);
       console.log(path.join(__dirname, '../uploads/') + files.filetoupload.name);
       
-      responseHandler.respondJSON(request, response, 201, files.filetoupload.name);
+      responseHandler.respondJSON(request, response, 201, {name : files.filetoupload.name, path : files.filetoupload.path});
       //htmlHandler.getIndex(request, response);
 
       //fs.rename(oldPath, newPath, (error) => {
