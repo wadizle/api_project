@@ -56,6 +56,7 @@ const notFound = (request, response) => {
 };
 
 module.exports = {
+  respondJSON,
   addUser,
   sendFiles,
   notFound,
