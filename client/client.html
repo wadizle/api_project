@@ -35,25 +35,26 @@
         //};
 
         const sendFile = (e, uploadForm) => {
+            //console.log(e);
             e.preventDefault();
-
-            const files = document.querySelector('#fileSelector').files;
-            console.log(files);
-
+            //
+            //const files = document.querySelector('#fileSelector').files;
+            //console.log(files);
+            //
             const xhr = new XMLHttpRequest();
             xhr.open("POST", "/uploadFile");
-
-            //xhr.setRequestHeader('Accept', 'application/json');
-            //xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            //
+            ////xhr.setRequestHeader('Accept', 'application/json');
+            ////xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
             xhr.setRequestHeader('Content-Type', 'multipart/form-data');
-
+            //
             xhr.onload = () => handleResponse(xhr);
-
-            //const formData = new FormData();
-            //xhr.send(formData);
-
-            xhr.send(uploadForm);
-
+            
+            ////const formData = new FormData();
+            ////xhr.send(formData);
+            //
+            xhr.send(e);
+            //
             return false;
         };
 
@@ -77,6 +78,9 @@
             button.onclick = () => {
                 const xhr = new XMLHttpRequest();
                 xhr.open("GET", "/downloadFile");
+
+                xhr.onload = () => console.log(xhr.response);
+
                 xhr.send();
 
                 return false;
@@ -136,7 +140,7 @@
         //};
 
         const init = () => {
-            const uploadForm = document.querySelector('#uploadForm');
+            //const uploadForm = document.querySelector('#uploadForm');
             //const addFile = (e) => sendFile(e, uploadForm);
             //uploadForm.addEventListener('submit', addFile);
             //uploadForm.addEventListener('submit', (e) => sendFile(e, uploadForm));
@@ -156,7 +160,7 @@
     <section id="top">
     <h3>POST Status Code Tests</h3>
     <form id="uploadForm" method="post" action="/uploadForm" enctype="multipart/form-data">
-        <input type="file" name="filetoupload" id="fileSelector" multiple="multiple"/>
+        <input type="file" name="filetoupload" id="fileSelector"/>
         <input type="submit" value="Upload File" />
     </form>
     <form id="displayForm">

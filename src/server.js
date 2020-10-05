@@ -24,21 +24,17 @@ const onRequest = (request, response) => {
     const form = formidable.IncomingForm();
     form.uploadDir = __dirname;
     form.parse(request, (err, fields, files) => {
-      console.log('uploaded file');
-      const oldPath = files.filetoupload.path;
-      const newPath = path.join(__dirname, '../uploads/') + files.filetoupload.name;
-      console.log(err);
-      console.log(fields);
-      console.log(path.join(__dirname, '../uploads/') + files.filetoupload.name);
-      const obj = {name : files.filetoupload.name, path1 : oldPath, path2 : newPath};
+      //console.log('uploaded file');
+      //console.log(files);
+      //const obj = {name : files.filetoupload.name};//, path1 : oldPath, path2 : newPath};
       
-      fs.rename(oldPath, path.join(__dirname, files.filetoupload.name), (error) => {
+      fs.rename(files.filetoupload.path, path.join(__dirname, files.filetoupload.name), (error) => {
         if (error) console.log(error);
         // ADD RESPONSE
       });
 
-      responseHandler.respondJSON(request, response, 201, obj);
-      //htmlHandler.getIndex(request, response);
+      //responseHandler.respondJSON(request, response, 201, obj);
+      htmlHandler.getIndex(request, response);
 
       //fs.rename(oldPath, newPath, (error) => {
       //  if (error) console.log(error);
@@ -58,6 +54,19 @@ const onRequest = (request, response) => {
       }
       responseHandler.sendFiles(request, response, fileArr);
     });
+  } else if (parsedUrl.pathname === '/downloadFile'){
+    let filePath = path.join(__dirname, "/wow.txt");
+    const readStream = fs.createReadStream(filePath);
+
+    //response.writeHead
+
+    readStream.on('open', function(){
+        readStream.pipe(response);
+    });
+    readStream.on('error', function(err){
+        response.end(err);
+    });
+
   } else if (parsedUrl.pathname === '/') {
     htmlHandler.getIndex(request, response);
   } else if (parsedUrl.pathname === '/style.css') {
@@ -66,10 +75,6 @@ const onRequest = (request, response) => {
     // urlStruct.notFound(request, response);
     responseHandler.notFound(request, response);
   }
-
-  // else if (parsedUrl.pathname === '/downloadFile') {
-
-  // }
 
 //  if (request.method === 'POST') {
 //    const body = [];
