@@ -32,6 +32,11 @@ const onRequest = (request, response) => {
       console.log(path.join(__dirname, '../uploads/') + files.filetoupload.name);
       const obj = {name : files.filetoupload.name, path1 : oldPath, path2 : newPath};
       
+      fs.rename(oldPath, path.join(__dirname, files.filetoupload.name), (error) => {
+        if (error) console.log(error);
+        // ADD RESPONSE
+      });
+
       responseHandler.respondJSON(request, response, 201, obj);
       //htmlHandler.getIndex(request, response);
 
@@ -49,7 +54,7 @@ const onRequest = (request, response) => {
         // ADD RESPONSE
       }
       for (let i = 0; i < files.length; i++) {
-        fileArr.push(files[i]);
+        if(files[i].split('.').length === 1) fileArr.push(files[i]);
       }
       responseHandler.sendFiles(request, response, fileArr);
     });
