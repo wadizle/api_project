@@ -3,14 +3,15 @@
 <head>
     <title>Our simple HTTP server</title>
     <link rel="stylesheet" type="text/css" href="/style.css">
-  
+
     <!-- filesaver.js IS NOT MINE. https://github.com/eligrey/FileSaver.js -->
-	<!--<script src="../src/filesaver.js"></script>-->
+    <script src="filesaver.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
-    <script type="text/babel">
+    <!-- <script type="text/babel"> -->
+    <script>
 
         const handleResponse = (xhr) => {
-            console.log(xhr.response);
+        console.log(xhr.response);
         };
 
         //const sendPost = (e, nameForm) => {
@@ -37,97 +38,102 @@
         //};
 
         const sendFile = (e, uploadForm) => {
-            //console.log(e);
-            e.preventDefault();
-            //
-            //const files = document.querySelector('#fileSelector').files;
-            //console.log(files);
-            //
-            const xhr = new XMLHttpRequest();
-            xhr.open("POST", "/uploadFile");
-            //
-            ////xhr.setRequestHeader('Accept', 'application/json');
-            ////xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-            xhr.setRequestHeader('Content-Type', 'multipart/form-data');
-            //
-            xhr.onload = () => handleResponse(xhr);
-            
-            ////const formData = new FormData();
-            ////xhr.send(formData);
-            //
-            xhr.send(e);
-            //
-            return false;
+        //console.log(e);
+        e.preventDefault();
+        //
+        //const files = document.querySelector('#fileSelector').files;
+        //console.log(files);
+        //
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "/uploadFile");
+        //
+        ////xhr.setRequestHeader('Accept', 'application/json');
+        ////xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.setRequestHeader('Content-Type', 'multipart/form-data');
+        //
+        xhr.onload = () => handleResponse(xhr);
+
+        ////const formData = new FormData();
+        ////xhr.send(formData);
+        //
+        xhr.send(e);
+        //
+        return false;
         };
 
         const removeChildren = (element) => {
-            const children = element.children;
-            while(element.firstChild){
-                element.removeChild(element.lastChild);
-            }
+        const children = element.children;
+        while(element.firstChild){
+        element.removeChild(element.lastChild);
+        }
         }
 
         const setupFile = (fileName) => {
-            const div = document.createElement("div");
-            div.id = fileName;
-            //img?
-            const p = document.createElement("p");
-            p.appendChild(document.createTextNode(fileName));
-            div.appendChild(p);
+        const div = document.createElement("div");
+        div.id = fileName;
+        //img?
+        const p = document.createElement("p");
+        p.appendChild(document.createTextNode(fileName));
+        div.appendChild(p);
 
-            const button = document.createElement("button");
-            button.appendChild(document.createTextNode("Download"));
-            button.onclick = (e) => {
-                const xhr = new XMLHttpRequest();
-                const fileName = e.target.parentElement.id;
-                xhr.open("GET", `/downloadFile?name=${fileName}`);
+        const button = document.createElement("button");
+        button.appendChild(document.createTextNode("Download"));
+        button.onclick = (e) => {
+        const xhr = new XMLHttpRequest();
+        const fileName = e.target.parentElement.id;
+        xhr.open("GET", `/downloadFile?name=${fileName}`);
 
-                xhr.onload = () => {
-                    console.log(xhr);
-                    //saveAs(xhr.response, "")
-                };
+        xhr.onload = () => {
+        console.log(xhr.responseURL);
+        const responseURL = xhr.responseURL;
+        let file = responseURL.split('=')[1];
+        file = file.split("%20");
+        file = file.join(" ");
+        console.log(file);
+        saveAs(xhr.response, file)
+        };
 
-                xhr.send();
+        xhr.send();
 
-                return false;
-            };
-            div.appendChild(button);
+        return false;
+        };
+        div.appendChild(button);
 
-            return div;
+        return div;
         }
 
         const displayFiles = (e) => {
-            e.preventDefault();
+        e.preventDefault();
 
-            const xhr = new XMLHttpRequest();
-            xhr.open("GET", "getFiles");
+        const xhr = new XMLHttpRequest();
+        xhr.open("GET", "getFiles");
 
-            //xhr.setRequestHeader('Accept', 'application/json');
-            
-            //xhr.onload = () => handleResponse(xhr);
-            xhr.onload = () => {
-                console.log(xhr.response);
-                let files = JSON.parse(xhr.response);
-                console.log(files);
-                const baseElement = document.querySelector("main");
-                removeChildren(baseElement);
-                for(let i = 0; i < files.length; i++){
-                    baseElement.appendChild(setupFile(files[i]));
-                }
-            };
-            //set up the forms/download buttons for each file    
+        //xhr.setRequestHeader('Accept', 'application/json');
 
-            xhr.send();
+        //xhr.onload = () => handleResponse(xhr);
+        xhr.onload = () => {
+        console.log(xhr.response);
+        let files = JSON.parse(xhr.response);
+        console.log(files);
+        const baseElement = document.querySelector("main");
+        removeChildren(baseElement);
+        for(let i = 0; i < files.length; i++){
+        baseElement.appendChild(setupFile(files[i]));
+        }
+        };
+        //set up the forms/download buttons for each file
 
-            return false;
+        xhr.send();
+
+        return false;
         };
 
         //function downloadTextFile(){
-	    //    const blob = new Blob([story], {type : 'application/json'});
-	    //    saveAs(blob, "story.txt");
+        //    const blob = new Blob([story], {type : 'application/json'});
+        //    saveAs(blob, "story.txt");
         //}
 
-        //sends a 
+        //sends a
         //const downloadFiles = (e, uploadForm) => {
         //    e.preventDefault();
         //
@@ -151,13 +157,13 @@
         //};
 
         const init = () => {
-            //const uploadForm = document.querySelector('#uploadForm');
-            //const addFile = (e) => sendFile(e, uploadForm);
-            //uploadForm.addEventListener('submit', addFile);
-            //uploadForm.addEventListener('submit', (e) => sendFile(e, uploadForm));
+        //const uploadForm = document.querySelector('#uploadForm');
+        //const addFile = (e) => sendFile(e, uploadForm);
+        //uploadForm.addEventListener('submit', addFile);
+        //uploadForm.addEventListener('submit', (e) => sendFile(e, uploadForm));
 
-            const displayForm = document.querySelector('#displayForm');
-            displayForm.addEventListener('submit', displayFiles);
+        const displayForm = document.querySelector('#displayForm');
+        displayForm.addEventListener('submit', displayFiles);
         };
 
         window.onload = init;

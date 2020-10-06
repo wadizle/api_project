@@ -7,6 +7,7 @@ const formidable = require('formidable');
 // const express = require('express');
 const htmlHandler = require('./htmlResponses.js');
 const responseHandler = require('./responses.js');
+const fileHandler = require('./mediaResponses.js');
 
 const port = process.env.PORT || process.env.NODE_PORT || 3000;
 
@@ -64,25 +65,29 @@ const onRequest = (request, response) => {
     // express.response.download(filePath);
     // const file = fs.createWriteStream(filePath);
 
-    const readStream = fs.createReadStream(filePath);
+    fileHandler.loadFile(request, response, filePath, 'application/pdf');
 
-    response.writeHead(200, {
-      // 'Content-Type': 'audio/mpeg',
-      'Content-Type': 'application/pdf',
-      'Content-Length': fs.statSync(filePath).size,
-      'Content-Disposition': `attachment; filename=${params.name}`,
-    });
-
-    readStream.on('open', () => {
-      readStream.pipe(response);
-    });
-    readStream.on('error', (err) => {
-      response.end(err);
-    });
+    // const readStream = fs.createReadStream(filePath);
+    //
+    // response.writeHead(200, {
+    //  // 'Content-Type': 'audio/mpeg',
+    //  'Content-Type': 'application/pdf',
+    //  'Content-Length': fs.statSync(filePath).size,
+    //  'Content-Disposition': `attachment; filename=${params.name}`,
+    // });
+    //
+    // readStream.on('open', () => {
+    //  readStream.pipe(response);
+    // });
+    // readStream.on('error', (err) => {
+    //  response.end(err);
+    // });
   } else if (parsedUrl.pathname === '/') {
     htmlHandler.getIndex(request, response);
   } else if (parsedUrl.pathname === '/style.css') {
     htmlHandler.getCSS(request, response);
+  } else if (parsedUrl.pathname === '/filesaver.js') {
+    htmlHandler.getScript(request, response);
   } else {
     // urlStruct.notFound(request, response);
     responseHandler.notFound(request, response);
