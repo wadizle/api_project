@@ -15,7 +15,8 @@ const onRequest = (request, response) => {
   const parsedUrl = url.parse(request.url);
   const fileArr = [];
   const params = query.parse(parsedUrl.query);
-  let fileName, filePath;
+  let fileName; let
+    filePath;
   let form;
 
   // ensures each url is handled properly
@@ -33,11 +34,13 @@ const onRequest = (request, response) => {
       form.uploadDir = __dirname;
       form.parse(request, (err, fields, files) => {
         let { name } = files.filetoupload;
-        if (!name) name = 'empty.txt';
+        if (!name) name = 'empty.js';
 
         // renames the file to what it is supposed to be
         fs.rename(files.filetoupload.path, path.join(__dirname, name), (error) => {
-          if(error) responseHandler.respondJSON(request, response, 404, error);
+          if (error) {
+            responseHandler.respondJSON(request, response, 404, error);
+          }
         });
         htmlHandler.getIndex(request, response, 201);
       });
