@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-// I'm not sure I love the way I split the functions but it works decently
+// getting the positions of the start/end of the data from stats
 const getPositions = (request, stats) => {
   let { range } = request.headers;
 
@@ -12,13 +12,16 @@ const getPositions = (request, stats) => {
   const positions = range.replace(/bytes=/, '').split('-');
 
   let start = parseInt(positions[0], 10);
-
-  const total = stats.size;
-  const end = positions[1] ? parseInt(positions[1], 10) : total - 1;
+  let total = stats.size;
+  let end = positions[1] ? parseInt(positions[1], 10) : total - 1;
 
   if (start > end) {
     start = end - 1;
   }
+
+  if (total < 0) total = 0;
+  if (start < 0) start = 0;
+  if (end < 0) end = 0;
 
   return {
     start,
@@ -27,6 +30,7 @@ const getPositions = (request, stats) => {
   };
 };
 
+// creates an object to be passed as a header
 const createHeadObject = (response, start, end, total, chunksize, contentType) => ({
   'Content-Range': `bytes ${start}-${end}/${total}`,
   'Accept-Ranges': 'bytes',
@@ -34,6 +38,7 @@ const createHeadObject = (response, start, end, total, chunksize, contentType) =
   'Content-Type': contentType,
 });
 
+// creates the file stream to be read
 const createStream = (file, start, end, response) => {
   const stream = fs.createReadStream(file, { start, end });
 
@@ -48,15 +53,12 @@ const createStream = (file, start, end, response) => {
   return stream;
 };
 
+// a brute force way of determining the mime type of a file
 const determineMimeType = (fileName) => {
   let type = 'undefined';
   let extension = fileName.split('.')[1];
   extension = extension.toLowerCase();
-  console.log(extension);
   switch (extension.toLowerCase()) {
-    case 'docx':
-      type = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
-      break;
     case 'gif':
       type = 'image/gif';
       break;
@@ -72,23 +74,14 @@ const determineMimeType = (fileName) => {
     case 'pdf':
       type = 'application/pdf';
       break;
-    case 'pptx':
-      type = 'application/vnd.openxmlformats-officedocument.presentationml.presentation';
-      break;
     case 'svg':
       type = 'image/svg+xml';
-      break;
-    case 'ttf':
-      type = 'font/ttf';
       break;
     case 'txt':
       type = 'text/plain';
       break;
     case 'wav':
       type = 'audio/wav';
-      break;
-    case 'xlsx':
-      type = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
       break;
     default:
       type = 'undefined';
@@ -97,15 +90,15 @@ const determineMimeType = (fileName) => {
   return type;
 };
 
+// loads a file using the other functions in the file
 const loadFile = (request, response, filePath, fileName) => {
   const file = path.resolve(__dirname, filePath);
 
   fs.stat(file, (err, stats) => {
     if (err) {
-      if (err.code === 'ENOENT') {
-        response.writeHead(404);
-      }
-      return response.end(err);
+      response.writeHead(400);
+      response.write(JSON.stringify(err));
+      return response.end();
     }
 
     const positions = getPositions(request, stats);

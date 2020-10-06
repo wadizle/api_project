@@ -1,17 +1,49 @@
 html, body {
-  height: 100%;
-  width: 100%;
-  margin: 0;
-  padding: 0;
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: Calibri;
 }
 
-#top {
-  text-align: center;
-  margin: 0 auto;
+header{
+    background-color: #C3DFE0;
+    width: 50%;
+    margin: 0px auto;
+    margin-top: 50px;
+    margin-bottom: 40px;
+    padding-top: 10px;
+    padding-bottom: 30px;
+    border-radius: 10px;
 }
 
-#top h1 {
-  font-size: 2em;
+#forms {
+    width: 50%;
+    background-color: #8985A6;
+    text-align: center;
+    margin: 0 auto;
+    border-radius: 8px;
+    padding-top: 10px;
+    padding-bottom: 20px;
+}
+
+main {
+    width: 70%;
+    margin: 0px auto;
+    margin-top: 20px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: flex-start;
+}
+
+main div {
+    background-color: #D3EFF0;
+    padding: 2% 0px;
+    margin: 0px 4%; 
+    margin-top: 25px;
+    width: 25%;
+    border-radius: 8px;
 }
 
 #content {
@@ -19,3 +51,43 @@ html, body {
   font-size: 2em;
   text-align: center;
 }
+
+input {
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#uploadButton, #displayButton {
+    background-color: #D3CAEF;
+}
+
+#fileSelector {
+    margin-left: 10%;
+}
+
+#displayForm {
+    margin-top: 30px;
+}
+
+h1{
+    font-family: Bahnschrift;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+p{
+    font-size: 1.1rem;
+    text-align: center;
+    margin: 0px auto;
+}
+
+a{
+    display: block;
+    text-align: center;
+    margin: 0px auto;
+    margin-top: 30px;
+}
+
+

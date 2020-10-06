@@ -1,51 +1,22 @@
-// const users = {};
-
+// sends a json object to the client
 const respondJSON = (request, response, status, object) => {
   response.writeHead(status, { 'Content-Type': 'application/json' });
   response.write(JSON.stringify(object));
   response.end();
 };
 
+// sends a response but no data back to the client
 const respondJSONMeta = (request, response, status) => {
   response.writeHead(status, { 'Content-Type': 'application/json' });
   response.end();
 };
 
-const addUser = (request, response) => {
-// const addUser = (request, response, body) => {
-  const responseObj = {
-    message: 'Name and age are both required',
-  };
-
-  // if (!body.name || !body.age) {
-  //  responseObj.id = 'missing params';
-  //  // return respondJSON(request, response, 400, JSON.stringify(responseObj));
-  //  return respondJSON(request, response, 400, responseObj);
-  // }
-  //
-  const responseCode = 201;
-  //
-  // if (users[body.name]) {
-  //  responseCode = 204;
-  // } else {
-  //  users[body.name] = {};
-  //  users[body.name].name = body.name;
-  // }
-  //
-  // users[body.name].age = body.age;
-  //
-  if (responseCode === 201) {
-    responseObj.message = 'Created Successfully!';
-    return respondJSON(request, response, responseCode, responseObj);
-  }
-  //
-  return respondJSONMeta(request, response, responseCode);
-};
-
+// sends the files passed in onto the client
 const sendFiles = (request, response, files) => {
   respondJSON(request, response, 200, files);
 };
 
+// informs the client that a page was not found (404)
 const notFound = (request, response) => {
   const responseObj = {
     message: 'The page you are looking for was not found',
@@ -57,7 +28,7 @@ const notFound = (request, response) => {
 
 module.exports = {
   respondJSON,
-  addUser,
+  respondJSONMeta,
   sendFiles,
   notFound,
 };
