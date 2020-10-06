@@ -60,28 +60,7 @@ const onRequest = (request, response) => {
     const params = query.parse(parsedUrl.query);
     const fileName = params.name;
     const filePath = path.join(__dirname, fileName);
-
-    // console.log(express)
-    // express.response.download(filePath);
-    // const file = fs.createWriteStream(filePath);
-
-    fileHandler.loadFile(request, response, filePath, 'application/pdf');
-
-    // const readStream = fs.createReadStream(filePath);
-    //
-    // response.writeHead(200, {
-    //  // 'Content-Type': 'audio/mpeg',
-    //  'Content-Type': 'application/pdf',
-    //  'Content-Length': fs.statSync(filePath).size,
-    //  'Content-Disposition': `attachment; filename=${params.name}`,
-    // });
-    //
-    // readStream.on('open', () => {
-    //  readStream.pipe(response);
-    // });
-    // readStream.on('error', (err) => {
-    //  response.end(err);
-    // });
+    fileHandler.loadFile(request, response, filePath, fileName);
   } else if (parsedUrl.pathname === '/') {
     htmlHandler.getIndex(request, response);
   } else if (parsedUrl.pathname === '/style.css') {

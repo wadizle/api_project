@@ -2,7 +2,7 @@ const fs = require('fs');
 
 const index = fs.readFileSync(`${__dirname}/../client/client.html`);
 const style = fs.readFileSync(`${__dirname}/../client/style.css`);
-const script = fs.readFileSync(`${__dirname}/filesaver.js`);
+const script = fs.readFileSync(`${__dirname}/../client/filesaver.js`);
 
 const getIndex = (request, response) => {
   response.writeHead(200, { 'Content-Type': 'text/html' });
